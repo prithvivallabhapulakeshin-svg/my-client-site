@@ -29,6 +29,7 @@ export default function Home() {
   const [cart, setCart] = useState<Product[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedInquiry, setSelectedInquiry] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const filteredProducts = activeTab === "all" 
     ? PRODUCTS 
@@ -47,6 +48,28 @@ export default function Home() {
     const numeric = parseInt(item.price.replace(/[^0-9]/g, "")) || 0;
     return acc + numeric;
   }, 0);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const message = formData.get("message") as string;
+
+    const res = await submitContactForm({ name, email, message });
+    setIsSubmitting(false);
+
+    if (res.error) {
+      alert(`Error: ${res.error}`);
+    } else {
+      alert(res.warning || "Inquiry submitted successfully!");
+      form.reset();
+      setSelectedInquiry("");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500 selection:text-slate-950">
@@ -119,7 +142,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Hero Visual Card */}
         <div className="lg:col-span-5">
           <div className="bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 p-8 rounded-3xl shadow-2xl relative overflow-hidden">
             <div className="absolute -top-12 -right-12 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -150,7 +172,6 @@ export default function Home() {
             <p className="text-slate-400 text-sm mt-1">Direct from official brand distributors with full manufacturer warranty.</p>
           </div>
 
-          {/* Filter Tabs */}
           <div className="flex flex-wrap gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
             {["all", "cricket", "badminton", "fitness", "apparel"].map(tab => (
               <button
@@ -168,7 +189,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Product Cards */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredProducts.map(product => (
             <div
@@ -239,7 +259,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stock & Service Inquiry Form (Integrated with Resend + Supabase) */}
+      {/* Inquiry Form */}
       <section id="inquiry" className="max-w-4xl mx-auto px-6 py-20 border-t border-slate-900">
         <div className="bg-slate-900 border border-slate-800 p-8 md:p-12 rounded-3xl shadow-2xl relative">
           <div className="text-center mb-10">
@@ -252,7 +272,7 @@ export default function Home() {
             </p>
           </div>
 
-          <form action={submitContactForm} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-2">
@@ -288,23 +308,25 @@ export default function Home() {
                 name="message"
                 required
                 rows={4}
-                defaultValue={selectedInquiry}
-                placeholder="e.g. Hi, I am looking for an SS Master 5000 English Willow bat (~1160g) and machine knocking service. Is this available at your store?"
+                value={selectedInquiry}
+                onChange={(e) => setSelectedInquiry(e.target.value)}
+                placeholder="e.g. Hi, I am looking for an SS Master 5000 English Willow bat (~1160g) and machine knocking service."
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-4 rounded-xl transition-all text-sm uppercase tracking-wider shadow-lg shadow-amber-500/20"
+              disabled={isSubmitting}
+              className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 font-black py-4 rounded-xl transition-all text-sm uppercase tracking-wider shadow-lg shadow-amber-500/20"
             >
-              Submit Inquiry to Store Desk
+              {isSubmitting ? "Submitting Inquiry..." : "Submit Inquiry to Store Desk"}
             </button>
           </form>
         </div>
       </section>
 
-      {/* Cart Drawer Modal */}
+      {/* Cart Drawer */}
       {isCartOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/80 backdrop-blur-sm">
           <div className="w-full max-w-md bg-slate-900 border-l border-slate-800 h-full p-6 flex flex-col justify-between">
@@ -350,7 +372,7 @@ export default function Home() {
                 <button
                   onClick={() => {
                     const names = cart.map(i => i.name).join(", ");
-                    setSelectedInquiry(`Order Reserve Request for: ${names} (Total ~₹${totalPrice})`);
+                    setSelectedInquiry(`Order Reserve Request for: ${names} (Total ~₹${totalPrice.toLocaleString()})`);
                     setIsCartOpen(false);
                     document.getElementById("inquiry")?.scrollIntoView({ behavior: "smooth" });
                   }}
