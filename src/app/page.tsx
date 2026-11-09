@@ -1,414 +1,179 @@
-"use client";
+import React from 'react';
 
-import { useState } from "react";
-import { submitContactForm } from "@/actions/contact";
-
-interface Product {
-  id: number;
-  name: string;
-  category: "cricket" | "badminton" | "fitness" | "apparel";
-  brand: string;
-  price: string;
-  inStock: boolean;
-  specs: string;
-}
-
-const PRODUCTS: Product[] = [
-  { id: 1, name: "SS Master 5000 English Willow Bat", category: "cricket", brand: "SS", price: "₹26,000", inStock: true, specs: "Grade 2 Willow | ~1170g | 39mm Edges" },
-  { id: 2, name: "MRF Genius Grand Edition Bat", category: "cricket", brand: "MRF", price: "₹48,500", inStock: true, specs: "Grade 1+ Players Willow | Mid-Profile" },
-  { id: 3, name: "SG Skipper Xtreme English Willow", category: "cricket", brand: "SG", price: "₹17,999", inStock: true, specs: "Full Profile | Hard Pressed | Thick Toe" },
-  { id: 4, name: "SS Gladiator Batting Leg Guards", category: "cricket", brand: "SS", price: "₹5,270", inStock: true, specs: "High Density Foam | Lightweight Mesh" },
-  { id: 5, name: "AeroFit Commercial Bumper Plates (20kg)", category: "fitness", brand: "AeroFit", price: "₹6,240", inStock: true, specs: "100% Virgin Rubber | 50mm Stainless Core" },
-  { id: 6, name: "Yonex Astrox 99 Pro Badminton Racquet", category: "badminton", brand: "Yonex", price: "₹16,490", inStock: false, specs: "Namd Graphite | Head Heavy | 4U G5" },
-  { id: 7, name: "Berge Quick-Dry Performance Track Pants", category: "apparel", brand: "Berge", price: "₹1,094", inStock: true, specs: "100% Breathable Poly-Mesh | Zip Pockets" },
-  { id: 8, name: "AeroFit Pickleball Paddle Ace", category: "fitness", brand: "AeroFit", price: "₹3,865", inStock: true, specs: "Extended 5.6-inch Handle | Polymer Core" },
-];
-
-export default function Home() {
-  const [activeTab, setActiveTab] = useState<string>("all");
-  const [cart, setCart] = useState<Product[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [selectedInquiry, setSelectedInquiry] = useState<string>("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const filteredProducts = activeTab === "all" 
-    ? PRODUCTS 
-    : PRODUCTS.filter(p => p.category === activeTab);
-
-  const addToCart = (product: Product) => {
-    setCart(prev => [...prev, product]);
-    setIsCartOpen(true);
-  };
-
-  const removeFromCart = (id: number) => {
-    setCart(prev => prev.filter(item => item.id !== id));
-  };
-
-  const totalPrice = cart.reduce((acc, item) => {
-    const numeric = parseInt(item.price.replace(/[^0-9]/g, "")) || 0;
-    return acc + numeric;
-  }, 0);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const message = formData.get("message") as string;
-
-    const res = await submitContactForm({ name, email, message });
-    setIsSubmitting(false);
-
-    if (res.error) {
-      alert(`Error: ${res.error}`);
-    } else {
-      alert(res.warning || "Inquiry submitted successfully!");
-      form.reset();
-      setSelectedInquiry("");
-    }
-  };
+export default function SachdevSportsHome() {
+  const products = [
+    {
+      id: 1,
+      name: 'MRF Genius Player Edition Bat',
+      category: 'Cricket',
+      price: '₹48,999',
+      rating: '4.9 ★',
+      badge: 'Pro Choice',
+      image: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=600&auto=format&fit=crop&q=80',
+      specs: ['Grade 1+ Willow', 'Monstrous Edges', 'Pro Player Specs'],
+    },
+    {
+      id: 2,
+      name: 'Shrey Elite Pro Helmet',
+      category: 'Protective Gear',
+      price: '₹14,499',
+      rating: '4.8 ★',
+      badge: 'Safety Rated',
+      image: 'https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=600&auto=format&fit=crop&q=80',
+      specs: ['Titanium Grille', 'Lightweight', 'BSi Certified'],
+    },
+    {
+      id: 3,
+      name: 'A6 Pro Spike Shoes',
+      category: 'Footwear',
+      price: '₹8,999',
+      rating: '4.7 ★',
+      badge: 'Best Seller',
+      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80',
+      specs: ['Full Metal Spikes', 'Cushioned Midsole', 'Tough Upper'],
+    },
+    {
+      id: 4,
+      name: 'Pro Tour Duffle Bag',
+      category: 'Luggage',
+      price: '₹6,299',
+      rating: '4.9 ★',
+      badge: 'New Arrival',
+      image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format&fit=crop&q=80',
+      specs: ['Heavy Duty Nylon', 'Bat Compartments', 'Wheel Base'],
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-950 text-white font-sans selection:bg-cyan-500 selection:text-slate-950">
       {/* Top Banner */}
-      <div className="bg-amber-500 text-slate-950 text-xs font-bold py-2 px-4 text-center tracking-wide uppercase">
-        Established 1928 • Authorized Dealer for MRF, SS, SG, Yonex & AeroFit • Express In-Store Pickup in Hyderabad
+      <div className="bg-gradient-to-r from-cyan-600 to-blue-600 text-xs sm:text-sm py-2 px-4 text-center font-medium tracking-wide">
+        ⚡ FREE Pan-India Shipping on Orders Above ₹2,999 | Genuine Sports Gear Guaranteed
       </div>
 
-      {/* Header & Nav */}
-      <header className="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-amber-500 text-slate-950 font-black px-2.5 py-1 rounded text-xl">S</div>
-            <div>
-              <span className="text-xl font-black tracking-wider text-amber-500 uppercase block leading-none">
-                Sachdev <span className="text-white">Sports</span>
-              </span>
-              <span className="text-[10px] text-slate-400 tracking-widest uppercase font-semibold">Legacy Since 1928</span>
-            </div>
+      {/* Navigation */}
+      <nav className="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center font-black text-xl shadow-lg shadow-cyan-500/20">
+            S
           </div>
-
-          <nav className="hidden md:flex gap-8 text-sm font-semibold text-slate-300">
-            <a href="#catalog" className="hover:text-amber-400 transition-colors">Catalog</a>
-            <a href="#services" className="hover:text-amber-400 transition-colors">Services</a>
-            <a href="#stores" className="hover:text-amber-400 transition-colors">Stores</a>
-            <a href="#inquiry" className="hover:text-amber-400 transition-colors">Stock Inquiry</a>
-          </nav>
-
-          <button
-            onClick={() => setIsCartOpen(true)}
-            className="relative bg-slate-900 border border-slate-700 hover:border-amber-500/50 px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold transition-all"
-          >
-            <span>Cart</span>
-            <span className="bg-amber-500 text-slate-950 px-2 py-0.5 rounded-full text-xs font-extrabold">
-              {cart.length}
-            </span>
-          </button>
+          <span className="font-extrabold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
+            SACHDEV <span className="text-cyan-400">SPORTS</span>
+          </span>
         </div>
-      </header>
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+          <a href="#products" className="hover:text-cyan-400 transition-colors">Cricket</a>
+          <a href="#products" className="hover:text-cyan-400 transition-colors">Protective</a>
+          <a href="#products" className="hover:text-cyan-400 transition-colors">Footwear</a>
+          <a href="#contact" className="hover:text-cyan-400 transition-colors">Inquiries</a>
+        </div>
+        <button className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm px-5 py-2.5 rounded-lg transition-all shadow-md shadow-cyan-500/20 active:scale-95">
+          Shop Catalog
+        </button>
+      </nav>
 
       {/* Hero Section */}
-      <section className="relative max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-7">
-          <span className="inline-flex items-center gap-2 bg-amber-500/10 text-amber-400 border border-amber-500/20 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-            Hyderabad's Premier Sports Equipment Store
-          </span>
-          <h1 className="text-4xl sm:text-6xl font-black leading-tight tracking-tight">
-            Pro-Grade Gear. <br />
-            <span className="bg-gradient-to-r from-amber-400 via-amber-500 to-amber-200 bg-clip-text text-transparent">
-              Match-Ready Precision.
-            </span>
-          </h1>
-          <p className="text-slate-400 text-lg mt-6 max-w-xl leading-relaxed">
-            From English Willow cricket bats hand-selected for weight and grain structure to professional badminton stringing and gym installations.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <a
-              href="#catalog"
-              className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-7 py-3.5 rounded-xl transition-all shadow-lg shadow-amber-500/20 text-sm uppercase tracking-wider"
-            >
-              Explore Gear Catalog
-            </a>
-            <a
-              href="#inquiry"
-              className="bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-200 font-bold px-7 py-3.5 rounded-xl transition-all text-sm uppercase tracking-wider"
-            >
-              Custom Bat Knocking & Gutting
-            </a>
+      <section className="relative overflow-hidden py-20 px-6 max-w-7xl mx-auto">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="text-center max-w-3xl mx-auto space-y-6 relative z-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 text-xs font-semibold tracking-wide">
+            <span>🚀 Next.js & Tailwind Powered Store</span>
           </div>
-        </div>
-
-        <div className="lg:col-span-5">
-          <div className="bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 p-8 rounded-3xl shadow-2xl relative overflow-hidden">
-            <div className="absolute -top-12 -right-12 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            <h3 className="text-xs uppercase font-extrabold tracking-widest text-amber-400 mb-2">Featured Collection</h3>
-            <h4 className="text-2xl font-black text-white">2026 Players Edition Willow</h4>
-            <p className="text-slate-400 text-sm mt-2">Factory knocked, hand-bound handles, and customized edge profiling available on request.</p>
-            <div className="mt-6 pt-6 border-t border-slate-800 flex items-center justify-between">
-              <div>
-                <span className="text-xs text-slate-400 block">Starting from</span>
-                <span className="text-2xl font-black text-amber-400">₹17,999</span>
-              </div>
-              <a
-                href="#catalog"
-                className="bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold text-xs px-4 py-2 rounded-lg hover:bg-amber-500 hover:text-slate-950 transition-all"
-              >
-                View Bats
-              </a>
-            </div>
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
+            Elevate Your Game with <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400">Pro-Grade Sports Equipment</span>
+          </h1>
+          <p className="text-slate-400 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+            Authorized distributor of top-tier cricket equipment, footwear, and protective gear. Engineered for elite performance on every matchday.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+            <a href="#products" className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold px-7 py-3.5 rounded-xl transition-all shadow-lg shadow-cyan-500/25">
+              Explore Featured Gear
+            </a>
+            <a href="#contact" className="border border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-slate-200 font-bold px-7 py-3.5 rounded-xl transition-all">
+              Custom Order Inquiry
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Catalog & Filter Section */}
-      <section id="catalog" className="max-w-7xl mx-auto px-6 py-16 border-t border-slate-900">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      {/* Product Grid Section */}
+      <section id="products" className="py-16 px-6 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-slate-800/80 pb-6">
           <div>
-            <h2 className="text-3xl font-black tracking-tight text-white">Store Inventory</h2>
-            <p className="text-slate-400 text-sm mt-1">Direct from official brand distributors with full manufacturer warranty.</p>
+            <h2 className="text-3xl font-bold tracking-tight text-white">Featured Equipment</h2>
+            <p className="text-slate-400 text-sm mt-1">Handpicked match-ready gear for professional athletes</p>
           </div>
-
-          <div className="flex flex-wrap gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
-            {["all", "cricket", "badminton", "fitness", "apparel"].map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
-                  activeTab === tab
-                    ? "bg-amber-500 text-slate-950 shadow"
-                    : "text-slate-400 hover:text-white hover:bg-slate-800/50"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+          <span className="text-xs font-mono text-cyan-400 mt-2 md:mt-0">Live Stock • Real-Time Database</span>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredProducts.map(product => (
-            <div
-              key={product.id}
-              className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 flex flex-col justify-between hover:border-amber-500/40 transition-all hover:-translate-y-1 group"
-            >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {products.map((item) => (
+            <div key={item.id} className="group rounded-2xl bg-slate-900/70 border border-slate-800/80 hover:border-cyan-500/50 p-4 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
-                    {product.brand}
+                <div className="relative h-48 rounded-xl overflow-hidden mb-4 bg-slate-950">
+                  <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <span className="absolute top-2.5 left-2.5 bg-slate-950/80 backdrop-blur-md border border-slate-800 text-cyan-300 text-[10px] font-bold px-2.5 py-1 rounded-md">
+                    {item.badge}
                   </span>
-                  {product.inStock ? (
-                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">In Stock</span>
-                  ) : (
-                    <span className="text-[10px] font-bold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded">Order Only</span>
-                  )}
+                  <span className="absolute top-2.5 right-2.5 bg-slate-950/80 text-amber-400 text-[11px] font-bold px-2 py-0.5 rounded-md">
+                    {item.rating}
+                  </span>
                 </div>
-                <h3 className="text-base font-bold text-white group-hover:text-amber-400 transition-colors leading-snug">
-                  {product.name}
-                </h3>
-                <p className="text-xs text-slate-400 mt-2 font-mono">{product.specs}</p>
+                <div className="text-[11px] font-semibold text-cyan-400 tracking-wider uppercase mb-1">{item.category}</div>
+                <h3 className="font-bold text-base text-white group-hover:text-cyan-300 transition-colors leading-snug">{item.name}</h3>
+                
+                <div className="flex flex-wrap gap-1.5 mt-3 mb-4">
+                  {item.specs.map((spec, idx) => (
+                    <span key={idx} className="bg-slate-800/60 border border-slate-700/50 text-slate-300 text-[10px] px-2 py-0.5 rounded">
+                      {spec}
+                    </span>
+                  ))}
+                </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-800/60 flex items-center justify-between">
-                <span className="text-lg font-black text-white">{product.price}</span>
-                <button
-                  onClick={() => addToCart(product)}
-                  className="bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 text-xs font-bold px-3.5 py-2 rounded-lg transition-all"
-                >
-                  + Add to Order
+              <div className="flex items-center justify-between border-t border-slate-800/60 pt-3 mt-2">
+                <div className="font-extrabold text-lg text-white">{item.price}</div>
+                <button className="bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 text-slate-200 text-xs font-bold px-3 py-2 rounded-lg transition-all">
+                  Add to Cart
                 </button>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section id="services" className="max-w-7xl mx-auto px-6 py-16 border-t border-slate-900">
-        <h2 className="text-3xl font-black text-white text-center">In-Store Technical Services</h2>
-        <p className="text-slate-400 text-sm text-center mt-2 max-w-lg mx-auto">
-          Expert workshop technicians dedicated to keeping your equipment running at peak performance.
-        </p>
-
-        <div className="grid md:grid-cols-3 gap-8 mt-12">
-          {[
-            { title: "Machine & Hand Bat Knocking", desc: "10,000+ machine knocks followed by toe and edge oiling for maximum blade protection." },
-            { title: "Computerized Racket Gutting", desc: "Precision electronic gutting for Yonex, Victor, and Li-Ning racquets with custom tension." },
-            { title: "Custom Gear Sizing & Repair", desc: "Full bat handle replacement, scuff sheet application, and pad retrimming services." }
-          ].map((service, idx) => (
-            <div key={idx} className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl">
-              <div className="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center font-black text-lg mb-6 border border-amber-500/20">
-                0{idx + 1}
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">{service.title}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{service.desc}</p>
-              <button
-                onClick={() => {
-                  setSelectedInquiry(`Service Inquiry: ${service.title}`);
-                  document.getElementById("inquiry")?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="mt-6 text-xs font-bold text-amber-400 hover:text-amber-300 uppercase tracking-wider inline-flex items-center gap-1"
-              >
-                Book Service &rarr;
-              </button>
             </div>
           ))}
         </div>
       </section>
 
       {/* Inquiry Form */}
-      <section id="inquiry" className="max-w-4xl mx-auto px-6 py-20 border-t border-slate-900">
-        <div className="bg-slate-900 border border-slate-800 p-8 md:p-12 rounded-3xl shadow-2xl relative">
-          <div className="text-center mb-10">
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
-              Direct Desk Inquiry
-            </span>
-            <h2 className="text-3xl font-black text-white mt-4">Contact Store Specialists</h2>
-            <p className="text-slate-400 text-sm mt-2 max-w-md mx-auto">
-              Check specific bat weight availability, ask for custom price quotes, or schedule equipment servicing.
-            </p>
+      <section id="contact" className="py-16 px-6 max-w-4xl mx-auto">
+        <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="text-center max-w-xl mx-auto mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">Direct Equipment Inquiry</h2>
+            <p className="text-slate-400 text-sm mt-2">Need custom bat knocking, team kit bulk orders, or gear recommendations?</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  placeholder="e.g. Nidhish Reddy"
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  placeholder="name@example.com"
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
-                />
-              </div>
-            </div>
-
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-4 max-w-lg mx-auto">
             <div>
-              <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-2">
-                Gear / Service Request
-              </label>
-              <textarea
-                name="message"
-                required
-                rows={4}
-                value={selectedInquiry}
-                onChange={(e) => setSelectedInquiry(e.target.value)}
-                placeholder="e.g. Hi, I am looking for an SS Master 5000 English Willow bat (~1160g) and machine knocking service."
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
-              />
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Full Name</label>
+              <input type="text" placeholder="e.g. Rahul Sharma" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" />
             </div>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 font-black py-4 rounded-xl transition-all text-sm uppercase tracking-wider shadow-lg shadow-amber-500/20"
-            >
-              {isSubmitting ? "Submitting Inquiry..." : "Submit Inquiry to Store Desk"}
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Email Address</label>
+              <input type="email" placeholder="name@example.com" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors" />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Gear / Order Requirements</label>
+              <textarea rows={3} placeholder="Tell us about the gear or bulk sizes you need..." className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors resize-none" />
+            </div>
+            <button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold py-3.5 rounded-xl transition-all shadow-lg shadow-cyan-500/20 active:scale-98">
+              Submit Inquiry via Resend API
             </button>
           </form>
         </div>
       </section>
 
-      {/* Cart Drawer */}
-      {isCartOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/80 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900 border-l border-slate-800 h-full p-6 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-                <h3 className="text-lg font-black text-white">Your Reserved Items ({cart.length})</h3>
-                <button
-                  onClick={() => setIsCartOpen(false)}
-                  className="text-slate-400 hover:text-white font-bold text-sm"
-                >
-                  ✕ Close
-                </button>
-              </div>
-
-              {cart.length === 0 ? (
-                <p className="text-slate-500 text-sm mt-8 text-center">Your cart is empty. Browse the catalog to add gear.</p>
-              ) : (
-                <div className="space-y-4 mt-6 max-h-[60vh] overflow-y-auto pr-2">
-                  {cart.map((item, idx) => (
-                    <div key={idx} className="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
-                      <div>
-                        <h4 className="text-sm font-bold text-white">{item.name}</h4>
-                        <span className="text-xs text-amber-400 font-black">{item.price}</span>
-                      </div>
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="text-slate-500 hover:text-rose-400 text-xs font-bold"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {cart.length > 0 && (
-              <div className="pt-6 border-t border-slate-800">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-slate-400 text-sm font-semibold">Estimated Total</span>
-                  <span className="text-xl font-black text-amber-400">₹{totalPrice.toLocaleString()}</span>
-                </div>
-                <button
-                  onClick={() => {
-                    const names = cart.map(i => i.name).join(", ");
-                    setSelectedInquiry(`Order Reserve Request for: ${names} (Total ~₹${totalPrice.toLocaleString()})`);
-                    setIsCartOpen(false);
-                    document.getElementById("inquiry")?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                  className="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-3.5 rounded-xl uppercase text-xs tracking-wider transition-all"
-                >
-                  Proceed to In-Store Reserve Inquiry
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Footer */}
-      <footer id="stores" className="border-t border-slate-900 bg-slate-950 py-12">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-slate-400 text-sm">
-          <div>
-            <span className="text-lg font-black text-amber-400 block mb-2 uppercase">Sachdev Sports</span>
-            <p className="text-xs leading-relaxed">
-              Hyderabad's premier retail sports enterprise since 1928. Providing genuine equipment for cricket, badminton, tennis, and fitness enthusiasts.
-            </p>
-          </div>
-          <div>
-            <span className="text-sm font-bold text-white block mb-2">Store Hours</span>
-            <p className="text-xs">Monday – Sunday: 10:30 AM – 9:00 PM</p>
-            <p className="text-xs mt-1">Express same-day in-store pickup available across Hyderabad branches.</p>
-          </div>
-          <div>
-            <span className="text-sm font-bold text-white block mb-2">Customer Care</span>
-            <p className="text-xs">Direct Desk: contact@sachdevsports.com</p>
-            <p className="text-xs mt-1">Tech Support & Knocking Desk Available Daily</p>
-          </div>
-        </div>
-        <div className="mt-8 pt-6 border-t border-slate-900 text-center text-xs text-slate-600">
-          © {new Date().getFullYear()} Sachdev Sports Concept Store. All rights reserved.
-        </div>
+      <footer className="border-t border-slate-800/80 py-8 text-center text-xs text-slate-500">
+        © 2026 Sachdev Sports • Engineered with Next.js, Tailwind CSS & Supabase
       </footer>
     </div>
   );
